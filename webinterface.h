@@ -57,6 +57,12 @@ button:hover{background:#0056b3}
 </div>
 </div>
 
+<div class='section'>
+<h2>Maintenance</h2>
+<p style='margin-bottom:10px'>Utilisez ce bouton pour redemarrer l'ESP32 en cas de blocage.</p>
+<button onclick='restartEsp()'>Redemarrer l'ESP32</button>
+</div>
+
 </div>
 
 <script>
@@ -144,6 +150,15 @@ async function setRelay(state){
   const r=await fetch('/api/relay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on:state})});
   if(!r.ok) alert('Erreur lors du controle du relais');
  }catch(e){ console.error('Error controlling relay:',e); }
+}
+
+async function restartEsp(){
+ if(!confirm("Redemarrer l'ESP32 maintenant ?")) return;
+ try{
+  const r=await fetch('/api/restart',{method:'POST'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+ }catch(e){ console.warn('Error restarting ESP:',e); }
+ alert("Redemarrage en cours... Patientez quelques secondes puis rechargez cette page.");
 }
 
 loadButtonConfig();
